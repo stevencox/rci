@@ -1,0 +1,320 @@
+<cruisecontrol>
+
+    <property name="ROOT" value="/home/scox/"/>
+    <property name="APP" value="${ROOT}/app"/>
+    <property name="DEV" value="${ROOT}/dev/renci"/>
+    <property name="CRUISE_HOME" value="${APP}/cruisecontrol-bin-2.8.3"/>
+
+    <property name="RENCICI" value="${ROOT}/dev/renci/rencici"/>
+    <property name="MAVEN_HOME" value="/home/scox/app/apache-maven-2.2.1"/>
+    <property name="APP_VERSION" value="0.3-SNAPSHOT"/>
+    <property name="CRUISE_URL" value="http://152.54.9.153:8080/cruisecontrol" />
+
+    <property name="BASH" value="/bin/bash" />
+
+    <property name="EMAIL_HOST" value="localhost" />
+    <property name="EMAIL_NOTIFICATION" value="scox@renci.org" />
+    <property name="EMAIL_RETURN_ADDRESS" value="scox@renci.org" />
+    
+    <property name="schedule.interval" value="1200"/>
+    <property name="build.after.failed" value="true"/>
+    <property name="require.modification" value="true"/>
+	      
+    <project name="commons" requireModification="${require.modification}">
+        <listeners>
+            <currentbuildstatuslistener file="logs/${project.name}/status.txt"/>
+        </listeners>
+        <bootstrappers>
+           <gitbootstrapper localWorkingCopy="${DEV}/${project.name}" />
+        </bootstrappers>
+	<modificationset>
+	  <git LocalWorkingCopy="${DEV}/${project.name}"/>
+	</modificationset>
+        <schedule interval="${schedule.interval}">
+            <maven2 mvnhome="${MAVEN_HOME}"
+                    pomfile="${DEV}/${project.name}/pom.xml"
+                    goal="clean install" />
+        </schedule>
+<!--
+        <publishers>
+            <onsuccess>
+                <artifactspublisher
+                   dest="artifacts/${project.name}"
+                   file="${DEV}/${project.name}/${project.name}-config/target/${project.name}-config-${APP_VERSION}.jar"/>
+                <artifactspublisher
+                   dest="artifacts/${project.name}"
+                   file="${DEV}/${project.name}/${project.name}-exec/target/${project.name}-exec-${APP_VERSION}.jar"/>
+                <artifactspublisher
+                   dest="artifacts/${project.name}"
+                   file="${DEV}/${project.name}/${project.name}-launcher/target/${project.name}-launcher-0.2-SNAPSHOT.jar"/>
+                <artifactspublisher
+                   dest="artifacts/${project.name}"
+                   file="${DEV}/${project.name}/${project.name}-logging/target/${project.name}-logging-${APP_VERSION}.jar"/>
+                <artifactspublisher
+                   dest="artifacts/${project.name}"
+                   file="${DEV}/${project.name}/${project.name}-reflection/target/${project.name}-reflection-${APP_VERSION}.jar"/>
+            </onsuccess>
+        </publishers>
+-->
+    </project>
+    <project name="condor" requireModification="${require.modification}">
+        <listeners>
+            <currentbuildstatuslistener file="logs/${project.name}/status.txt"/>
+        </listeners>
+        <bootstrappers>
+           <gitbootstrapper localWorkingCopy="${DEV}/${project.name}" />
+        </bootstrappers>
+	<modificationset>
+	  <git LocalWorkingCopy="${DEV}/${project.name}"/>
+	</modificationset>
+        <schedule interval="${schedule.interval}">
+            <maven2 mvnhome="${MAVEN_HOME}"
+                    pomfile="${DEV}/${project.name}/pom.xml"
+                    goal="clean install" />
+        </schedule>
+    </project>
+    <project name="launchers" requireModification="${require.modification}">
+        <listeners>
+            <currentbuildstatuslistener file="logs/${project.name}/status.txt"/>
+        </listeners>
+        <bootstrappers>
+           <gitbootstrapper localWorkingCopy="${DEV}/${project.name}" />
+        </bootstrappers>
+	<modificationset>
+	  <git LocalWorkingCopy="${DEV}/${project.name}"/>
+	</modificationset>
+        <schedule interval="${schedule.interval}">
+            <maven2 mvnhome="${MAVEN_HOME}"
+                    pomfile="${DEV}/${project.name}/pom.xml"
+                    goal="clean install" />
+        </schedule>
+    </project>
+    <project name="genesis2" requireModification="${require.modification}">
+        <listeners>
+            <currentbuildstatuslistener file="logs/${project.name}/status.txt"/>
+        </listeners>
+        <bootstrappers>
+           <gitbootstrapper localWorkingCopy="${DEV}/${project.name}" />
+        </bootstrappers>
+	<modificationset>
+	  <git LocalWorkingCopy="${DEV}/${project.name}"/>
+	</modificationset>
+        <schedule interval="${schedule.interval}">
+            <maven2 mvnhome="${MAVEN_HOME}"
+                    pomfile="${DEV}/${project.name}/pom.xml"
+                    goal="clean install" />
+        </schedule>
+    </project>
+    <project name="gawsr" requireModification="${require.modification}">
+        <listeners>
+            <currentbuildstatuslistener file="logs/${project.name}/status.txt"/>
+        </listeners>
+        <bootstrappers>
+           <gitbootstrapper localWorkingCopy="${DEV}/${project.name}" />
+        </bootstrappers>
+	<modificationset>
+	  <git LocalWorkingCopy="${DEV}/${project.name}"/>
+	</modificationset>
+        <schedule interval="${schedule.interval}">
+            <maven2 mvnhome="${MAVEN_HOME}"
+                    pomfile="${DEV}/${project.name}/pom.xml"
+                    goal="clean install" />
+        </schedule>
+    </project>
+    <project name="rsp-ws-clients" requireModification="${require.modification}">
+        <listeners>
+            <currentbuildstatuslistener file="logs/${project.name}/status.txt"/>
+        </listeners>
+        <bootstrappers>
+           <gitbootstrapper localWorkingCopy="${DEV}/${project.name}" />
+        </bootstrappers>
+	<modificationset>
+	  <git LocalWorkingCopy="${DEV}/${project.name}"/>
+	</modificationset>
+        <schedule interval="${schedule.interval}">
+            <maven2 mvnhome="${MAVEN_HOME}"
+                    pomfile="${DEV}/${project.name}/pom.xml"
+                    goal="clean install" />
+        </schedule>
+    </project>
+    <project name="science-portal" requireModification="${require.modification}">
+        <listeners>
+            <currentbuildstatuslistener file="logs/${project.name}/status.txt"/>
+        </listeners>
+        <bootstrappers>
+           <gitbootstrapper localWorkingCopy="${DEV}/${project.name}" />
+        </bootstrappers>
+	<modificationset>
+	  <git LocalWorkingCopy="${DEV}/${project.name}"/>
+	</modificationset>
+        <schedule interval="${schedule.interval}">
+            <maven2 mvnhome="${MAVEN_HOME}"
+                    pomfile="${DEV}/${project.name}/pom.xml"
+                    goal="clean install" />
+        </schedule>
+    </project>
+
+
+    
+    
+    <project name="urqmd" requireModification="${require.modification}">
+      <listeners>
+        <currentbuildstatuslistener file="logs/${project.name}/status.txt"/>
+      </listeners>
+      <plugin name="svnbootstrapper" classname="net.sourceforge.cruisecontrol.bootstrappers.SVNBootstrapper"/>
+      <plugin name="svn" classname="net.sourceforge.cruisecontrol.sourcecontrols.SVN"/>
+      <listeners>
+	<currentbuildstatuslistener file="logs/${project.name}/status.txt"/>
+      </listeners>
+      <bootstrappers>
+	<svnbootstrapper localWorkingCopy="${DEV}/rencici/app/${project.name}"/>
+      </bootstrappers>
+      <schedule interval="${schedule.interval}">
+        <maven2 mvnhome="${MAVEN_HOME}"
+                pomfile="${DEV}/rencici/app/${project.name}/pom.xml"
+                goal="clean install" />
+      </schedule>
+    </project>
+
+    <project name="mpich" requireModification="${require.modification}">
+      <listeners>
+        <currentbuildstatuslistener file="logs/${project.name}/status.txt"/>
+      </listeners>
+      <plugin name="svnbootstrapper" classname="net.sourceforge.cruisecontrol.bootstrappers.SVNBootstrapper"/>
+      <plugin name="svn" classname="net.sourceforge.cruisecontrol.sourcecontrols.SVN"/>
+      <listeners>
+	<currentbuildstatuslistener file="logs/${project.name}/status.txt"/>
+      </listeners>
+      <bootstrappers>
+	<svnbootstrapper localWorkingCopy="${DEV}/rencici/app/${project.name}"/>
+      </bootstrappers>
+      <schedule interval="${schedule.interval}">
+        <maven2 mvnhome="${MAVEN_HOME}"
+                pomfile="${DEV}/rencici/app/${project.name}/pom.xml"
+                goal="clean install" />
+      </schedule>
+    </project>
+    <project name="mpich2" requireModification="${require.modification}">
+      <listeners>
+        <currentbuildstatuslistener file="logs/${project.name}/status.txt"/>
+      </listeners>
+      <plugin name="svnbootstrapper" classname="net.sourceforge.cruisecontrol.bootstrappers.SVNBootstrapper"/>
+      <plugin name="svn" classname="net.sourceforge.cruisecontrol.sourcecontrols.SVN"/>
+      <listeners>
+	<currentbuildstatuslistener file="logs/${project.name}/status.txt"/>
+      </listeners>
+      <bootstrappers>
+	<svnbootstrapper localWorkingCopy="${DEV}/rencici/app/${project.name}"/>
+      </bootstrappers>
+      <schedule interval="${schedule.interval}">
+        <maven2 mvnhome="${MAVEN_HOME}"
+                pomfile="${DEV}/rencici/app/${project.name}/pom.xml"
+                goal="clean install" />
+      </schedule>
+    </project>
+    <project name="amber" requireModification="${require.modification}">
+      <listeners>
+        <currentbuildstatuslistener file="logs/${project.name}/status.txt"/>
+      </listeners>
+      <plugin name="svnbootstrapper" classname="net.sourceforge.cruisecontrol.bootstrappers.SVNBootstrapper"/>
+      <plugin name="svn" classname="net.sourceforge.cruisecontrol.sourcecontrols.SVN"/>
+      <listeners>
+	<currentbuildstatuslistener file="logs/${project.name}/status.txt"/>
+      </listeners>
+      <bootstrappers>
+	<svnbootstrapper localWorkingCopy="${DEV}/rencici/app/${project.name}"/>
+      </bootstrappers>
+      <schedule interval="${schedule.interval}">
+            <maven2 mvnhome="${MAVEN_HOME}"
+                    pomfile="${DEV}/rencici/app/${project.name}/pom.xml"
+                    goal="clean install" />
+      </schedule>
+    </project>
+
+    <project name="rencici" buildafterfailed="${build.after.failed}" requireModification="${require.modification}" >
+      <plugin name="svnbootstrapper" classname="net.sourceforge.cruisecontrol.bootstrappers.SVNBootstrapper"/>
+      <plugin name="svn" classname="net.sourceforge.cruisecontrol.sourcecontrols.SVN"/>
+      <listeners>
+	<currentbuildstatuslistener file="logs/${project.name}/status.txt"/>
+      </listeners>
+      <bootstrappers>
+	<svnbootstrapper localWorkingCopy="${DEV}/${project.name}"/>
+      </bootstrappers>
+      <modificationset>
+	<svn localWorkingCopy="${DEV}/${project.name}"
+	     repositoryLocation="https://renci-ci.svn.sourceforge.net/svnroot/renci-ci" />
+      </modificationset>
+      <schedule interval="${schedule.interval}">
+	<exec command="${BASH}"
+	      args="${DEV}/${project.name}/bin/environment.sh -t"
+	      workingdir="${DEV}/${project.name}"
+	      errorstr="Error" />
+      </schedule>
+      <publishers>
+<!--	<email mailhost="${EMAIL_HOST}"
+	       buildresultsurl="${CRUISE_URL}/buildresults/${project.name}"
+	       spamwhilebroken="true"
+	       returnaddress="${EMAIL_RETURN_ADDRESS}">
+          <failure address="${EMAIL_NOTIFICATION}" reportWhenFixed="true"/>
+	</email>
+-->
+        <artifactspublisher
+           dest="artifacts/${project.name}"
+           file="${DEV}/${project.name}/test.log" />
+      </publishers>      
+    </project>
+
+
+
+    <project name="iRods" buildafterfailed="${build.after.failed}" requireModification="${require.modification}" >
+      <plugin name="svnbootstrapper" classname="net.sourceforge.cruisecontrol.bootstrappers.SVNBootstrapper"/>
+      <plugin name="svn" classname="net.sourceforge.cruisecontrol.sourcecontrols.SVN"/>
+      <listeners>
+	<currentbuildstatuslistener file="logs/${project.name}/status.txt"/>
+      </listeners>
+      <bootstrappers>
+	<svnbootstrapper localWorkingCopy="${DEV}/${project.name}"/>
+      </bootstrappers>
+      <modificationset>
+	<svn localWorkingCopy="${DEV}/${project.name}"
+	     repositoryLocation="svn://irodssvn.ucsd.edu/trunk" />
+      </modificationset>
+      <schedule interval="${schedule.interval}">
+	<exec command="${BASH}"
+	      args="${RENCICI}/conf/cruise/buildirods.sh"
+	      workingdir="${DEV}/${project.name}/iRODS"
+	      errorstr="Error" />
+      </schedule>
+      <publishers>
+        <artifactspublisher
+           dest="artifacts/${project.name}"
+           file="${DEV}/${project.name}/iRODS/build.log" />
+      </publishers>
+    </project>
+
+    <project name="irods-jargon" buildafterfailed="${build.after.failed}" requireModification="${require.modification}" >
+      <plugin name="svnbootstrapper" classname="net.sourceforge.cruisecontrol.bootstrappers.SVNBootstrapper"/>
+      <plugin name="svn" classname="net.sourceforge.cruisecontrol.sourcecontrols.SVN"/>
+      <listeners>
+	<currentbuildstatuslistener file="logs/${project.name}/status.txt"/>
+      </listeners>
+      <bootstrappers>
+	<svnbootstrapper localWorkingCopy="${DEV}/${project.name}"/>
+      </bootstrappers>
+      <modificationset>
+	<svn localWorkingCopy="${DEV}/irods-jargon"
+	     repositoryLocation="svn://irodssvn.ucsd.edu/tags/Jargon_2_4_0" />
+      </modificationset>
+      <schedule interval="${schedule.interval}">
+        <maven2 mvnhome="${MAVEN_HOME}"
+                pomfile="${DEV}/${project.name}/pom.xml"
+                goal="clean install" />
+      </schedule>
+      <publishers>
+        <artifactspublisher
+           dest="artifacts/${project.name}"
+           file="${DEV}/${project.name}/build.log" />
+      </publishers>
+    </project>
+
+</cruisecontrol>

@@ -1,0 +1,95 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <parent>
+    <groupId>org.renci.ci</groupId>
+    <artifactId>app</artifactId>
+    <version>0.01alpha</version>
+  </parent>
+  <name>mpich</name>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.renci</groupId>
+  <artifactId>mpich-static</artifactId>
+  <version>1.2.7p1</version>
+  <packaging>jar</packaging>
+  <description>
+    Statically compiled MPICH-1.2.7p1.
+    Provides a portable mpi interconnect for heterogeneous high-throughput / multi-core environments.
+  </description>
+  <build>
+    <defaultGoal>install</defaultGoal>
+    <plugins>
+
+      <!--
+	 
+	 /home/scox/.renci/app/mpich-1.2.7p1/bin/mpif90  -c pi3f90.
+	 ifort: warning #10147: no action performed for specified file(s)
+	 /home/scox/.renci/app/mpich-1.2.7p1/bin/mpif90	   -o pi3f90 pi3f90.o 
+	 ifort: error #10236: File not found:  'pi3f90.o'
+	 make[2]: *** [pi3f90] Error 1
+	 make[1]: *** [all] Error 2
+	 
+	 https://lists.sdsc.edu/pipermail/npaci-rocks-discussion/2008-June/031231.html
+	 
+	 On Thu, 5 Jun 2008, jitrayut jitonnom wrote:
+	 
+	 You can safely ignore this error. If you look closely you will see that 
+	 the generated Makefile is trying to run mpif90 on a file that does not 
+	 have an .f90 extension (or any extension to that matter). If you look in 
+	 /share/apps/mpich-gcc/bin you will find a working mpif90. It just so 
+	 happens that the mpich-1.2.7p1 installer creates a broken Makefile for the 
+	 examples.
+	 
+	 Tim	
+	 
+	-->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <executions>
+          <execution>
+	    <id>mpich-build</id>
+	    <phase>compile</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <executable>/bin/bash</executable>
+              <arguments>
+		<argument>${env.DEV}/rencici/bin/bootstrap.sh</argument>
+		<argument>${env.DEV}/rencici/app/mpich/mpich.sh</argument>
+		<argument>-all</argument>
+		<argument>${project.build.directory}/classes</argument>
+              </arguments>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>attach-artifacts</id>
+            <phase>package</phase>
+            <goals>
+              <goal>attach-artifact</goal>
+            </goals>
+            <configuration>
+              <artifacts>
+                <artifact>
+                  <file>${project.build.directory}/mpich.tar.gz</file>
+                  <type>tar.gz</type>
+                </artifact>
+              </artifacts>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+    </plugins>
+  </build>
+</project>
+
+
+

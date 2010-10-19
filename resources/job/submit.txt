@@ -1,0 +1,58 @@
+universe        = grid       
+grid_type       = gt2        
+globusscheduler = $$(GlueCEInfoContactString)
+globusrsl       = (maxWallTime=MAX_WALL_TIME)(min_memory=MEMORY_REQUIREMENT)(max_memory=MEMORY_REQUIREMENT)CUSTOM_GLOBUSRSL
+requirements    = ( (TARGET.GlueCEInfoContactString =!= UNDEFINED) \
+                    && (TARGET.Rank > 300) \
+                    && (TARGET.OSGMM_MemPerCPU >= (MEMORY_REQUIREMENT * 1000)) \
+                    && (TARGET.OSGMM_CENetworkOutbound == TRUE) \
+                    && (TARGET.OSGMM_WorkingGlobusURLCopy == TRUE) \
+		    CUSTOM_GRID_GLUE \
+                  )
+
+
+#                    && ( isUndefined(TARGET.OSGMM_Success_Rate_USER) \
+#                          || (TARGET.OSGMM_Success_Rate_USER > 75) ) \
+
+# when retrying, remember the last 4 resources tried
+match_list_length = 4                               
+Rank              = (TARGET.Rank) - \
+                    ((TARGET.Name =?= LastMatchName0) * 1000) - \
+                    ((TARGET.Name =?= LastMatchName1) * 1000) - \
+                    ((TARGET.Name =?= LastMatchName2) * 1000) - \
+                    ((TARGET.Name =?= LastMatchName3) * 1000)     
+
+# make sure the job is being retried and rematched
+periodic_release = (NumGlobusSubmits < 5)         
+globusresubmit = (NumSystemHolds >= NumJobMatches)
+rematch = True                                    
+globus_rematch = True                             
+
+# only allow for the job to be queued for a while, then try to move it
+#  GlobusStatus==16 is suspended
+#  JobStatus==1 is pending
+#  JobStatus==2 is running
+periodic_hold = ( (GlobusStatus==16) || \
+                  ((JobStatus==1) && ((CurrentTime - EnteredCurrentStatus) > (20*60))) || \
+                  ((JobStatus==2) && ((CurrentTime - EnteredCurrentStatus) > (MAX_WALL_TIME*60))) )
+
+# stay in queue on failures
+on_exit_remove = (ExitBySignal == False) && (ExitCode == 0)
+
+executable = RUN_DIR/../../app/bin/rencici/bin/environment.sh
+arguments = --exec=EXECUTABLE_PATH --runid=RUN_ID --jobid=JOB_ID --appurl=BASE_URL --infile=INPUT_FILE
+
+stream_output = False
+stream_error  = False
+
+WhenToTransferOutput = ON_EXIT
+
+TransferExecutable = true
+
+output = RUN_DIR/logs/JOB_ID/job.out
+error = RUN_DIR/logs/JOB_ID/job.err
+log = alljobs.log
+
+notification = NEVER
+
+queue

@@ -1,0 +1,40 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <name>urqmd</name>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.renci</groupId>
+  <artifactId>torque</artifactId>
+  <version>2.5.1</version>
+  <packaging>jar</packaging>
+  <description>
+    Torque cluster load manager.
+  </description>
+  <build>
+    <defaultGoal>install</defaultGoal>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <executions>
+          <execution>
+	    <id>urqmd-build</id>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+	    <phase>compile</phase>
+            <configuration>
+              <executable>/bin/bash</executable>
+              <arguments>
+		<argument>${env.DEV}/renci/rencici/app/torque/torque.sh</argument>
+		<argument>-all</argument>
+              </arguments>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>
+
+
+

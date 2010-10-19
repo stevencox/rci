@@ -1,0 +1,75 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <parent>
+    <groupId>org.renci.ci</groupId>
+    <artifactId>app</artifactId>
+    <version>0.01alpha</version>
+  </parent>
+  <name>amber</name>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.renci</groupId>
+  <artifactId>amber-pmemd-static</artifactId>
+  <version>9</version>
+  <packaging>jar</packaging>
+  <description>
+    Statically compiled version of Amber 9 linked with MPICH-1.2.7p1.
+  </description>
+  <dependencies>
+    <!-- may eventually express relationship to mpi libs here -->
+  </dependencies>
+  <build>
+    <defaultGoal>install</defaultGoal>
+    <plugins>
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <executions>
+          <execution>
+	    <id>amber-build</id>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+	    <phase>compile</phase>
+            <configuration>
+              <executable>/bin/bash</executable>
+              <arguments>
+		<argument>${env.DEV}/rencici/bin/bootstrap.sh</argument>
+		<argument>${env.DEV}/rencici/app/amber/amber.sh</argument>
+		<argument>-all</argument>
+		<argument>${project.build.directory}/classes</argument>
+              </arguments>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>attach-artifacts</id>
+            <phase>package</phase>
+            <goals>
+              <goal>attach-artifact</goal>
+            </goals>
+            <configuration>
+              <artifacts>
+                <artifact>
+                  <file>${project.build.directory}/pmemd.tar.gz</file>
+                  <type>tar.gz</type>
+                </artifact>
+              </artifacts>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+
+    </plugins>
+  </build>
+</project>
+
+
+

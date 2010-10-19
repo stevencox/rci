@@ -1,0 +1,64 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <name>urqmd</name>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.renci</groupId>
+  <artifactId>urqmd</artifactId>
+  <version>3.3p1</version>
+  <packaging>jar</packaging>
+  <description>
+    #############################################################
+    ##                                                         ##
+    ##     UrQMD 3.3    University of Frankfurt                ##
+    ##                  http://urqmd.org	  	       ##
+    ##                  bleicher@th.physik.uni-frankfurt.de    ##
+    #############################################################
+    ##                                                         ##
+    ##     Please cite when using this model:                  ##
+    ##     S.A.Bass et al., Prog.Part.Nucl.Phys. 41 (1998) 225 ##
+    ##     M.Bleicher et al., J.Phys. G25  (1999) 1859         ##
+    ##                                                         ##
+    #############################################################
+    ##     UrQMD uses Pythia6.409 by T. Sjorstrand             ##
+    #############################################################
+    ##							       ##
+    ##     If hydrodynamic evolution is switched on (CTO 45 1) ##
+    ##     UrQMD uses the SHASTA algorithm by D. Rischke       ##
+    ##     Please cite when using the hybrid code:             ##
+    ##     D. Rischke et al., Nucl.Phys. A 595 (1995) 346      ##
+    ##     D. Rischke et al., Nucl.Phys. A 595 (1995) 383      ##
+    ##     H. Petersen et al., Phys.Rev. C78 (2008) 044901     ##
+    ## 							       ##
+    #############################################################
+  </description>
+  <build>
+    <defaultGoal>install</defaultGoal>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>1.2</version>
+        <executions>
+          <execution>
+	    <id>urqmd-build</id>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+	    <phase>compile</phase>
+            <configuration>
+              <executable>/bin/bash</executable>
+              <arguments>
+		<argument>${env.DEV}/rencici/app/urqmd/urqmd.sh</argument>
+		<argument>-all</argument>
+		<argument>${project.build.directory}/classes</argument>
+              </arguments>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>
+
+
+

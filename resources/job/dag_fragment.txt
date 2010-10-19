@@ -1,0 +1,4 @@
+JOB job_JOB_ID RUN_DIR/JOB_ID.submit.txt
+SCRIPT PRE job_JOB_ID APP_BIN/pre-script -f job_initialize -d RUN_DIR -r RUN_ID -j JOB_ID
+SCRIPT POST job_JOB_ID APP_BIN/post-script -f job_shutdown -d RUN_DIR -r RUN_ID -j JOB_ID
+RETRY job_JOB_ID 7

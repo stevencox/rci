@@ -1,0 +1,6 @@
+Minimization
+ &cntrl
+ imin=1, maxcyc=200,
+ ntpr=5,
+ EXTRA_TEMPLATE
+ &end

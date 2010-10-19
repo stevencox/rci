@@ -1,0 +1,39 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <name>mpich</name>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.renci.ci</groupId>
+  <artifactId>app</artifactId>
+  <version>0.01alpha</version>
+  <packaging>pom</packaging>
+  <description>
+    Cyberinfrastructure Tools and Applications for the Grid
+  </description>
+  <dependencyManagement>
+    <dependencies>
+    </dependencies>
+  </dependencyManagement>
+  <modules>
+    <module>amber</module>
+  </modules>
+  <build>
+    <defaultGoal>install</defaultGoal>
+    <pluginManagement>
+      <plugins>
+	<plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>exec-maven-plugin</artifactId>
+          <version>1.2</version>
+	</plugin>
+	<plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>build-helper-maven-plugin</artifactId>
+	  <version>1.5</version>
+	</plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
+</project>
+
+
+
