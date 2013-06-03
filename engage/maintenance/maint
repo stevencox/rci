@@ -1,0 +1,14 @@
+#!/bin/bash
+
+#set -e
+#set -x
+
+
+for cid in $( condor_q $USER | grep $USER | awk '{ print $1 }' ); do
+  Q=$( condor_q -l $cid | grep -i arguments | grep -c glom.dag )
+  if [[ $Q -gt 0 ]]; then
+      echo $cid
+  fi 
+done
+
+exit 0

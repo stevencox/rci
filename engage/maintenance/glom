@@ -1,0 +1,142 @@
+#!/usr/bin/env python2.7
+
+import glob
+import string
+import os
+import sys
+import argparse
+import logging
+import fnmatch 
+import string
+import shutil
+import json
+import contextlib
+import urllib2
+import xml.etree.ElementTree as ET
+ 
+from datetime import datetime
+ 
+# python 2.7 @ centos 5.5: http://www.jnvilo.com/snippets/12
+
+logger = logging.getLogger (__name__)
+
+class Glom (object):
+
+    def __init__(self, config):
+        self.frontend_status = config ['frontend_status']
+        self.x509_user_proxy = config ['x509_user_proxy']
+        self.requirements = '(FileSystemDomain != "") && (Memory >= 1 && OpSys == "LINUX" ) && (Arch == "X86_64") && (GLIDEIN_Job_Max_Time >= (22*60*60))'
+        self.run = self.get_timestamp ()
+        self.subs = os.path.join (self.run, "subs")
+        self.logs = os.path.join (self.run, "logs")
+        self.script_name = 'engage-maintenance.sh'
+        
+        self.DAG_ENTRY = """\
+JOB {0}_job {1}/{0}_job.sub
+RETRY {0}_job 3
+"""
+
+    def get_timestamp (self):
+        return datetime.now ().strftime ("%FT%H%M%SZ")
+
+    def get_sites (self):
+        sites = {}         
+        with contextlib.closing (urllib2.urlopen (self.frontend_status)) as stream:
+            model = ET.parse (stream)
+            for attributes in model.iter ("Attributes"):
+                site = attributes.get ("GLIDEIN_Site")
+                gatekeeper = attributes.get ("GLIDEIN_Gatekeeper")
+                sites [site] = gatekeeper
+        return sites
+
+    def write_dag (self, sites):
+        if not os.path.exists (self.subs):
+            os.makedirs (self.subs)
+        if not os.path.exists (self.logs):
+            os.makedirs (self.logs)
+        dag = []
+        dag_filename = os.path.join (self.run, "glom.dag")
+        for site in sites:
+            submit = self.write_submit (site, sites)
+            submit_filename = os.path.join (self.subs, "{0}_job.sub".format (site))
+            
+            submit_basename = os.path.basename (submit_filename)
+            dag.append (self.DAG_ENTRY.format (site, os.path.basename (self.subs), submit_basename))
+            
+            with open (submit_filename, 'w') as stream:
+                stream.write (submit)
+
+        self.write_script ()
+        
+        with open (dag_filename, 'w') as stream:
+            stream.write ('\n'.join (dag))
+
+	return dag_filename
+
+    def write_submit (self, site, sites):
+        gatekeeper = sites [site]
+        submit_text = """\
+universe      = vanilla
+x509userproxy = {3}
++DESIRED_Sites = "{0}"
+requirements  = ( {4} && (stringListMember(GLIDEIN_Site,DESIRED_Sites)) )
+
+#universe      = grid
+#grid_resource = gt2 {5}
+        
+executable    = {1}
+arguments     = {2}
+error         = logs/{0}.err
+output        = logs/{0}.out
+log           = alljobs.log
+
+periodic_release = (NumGlobusSubmits < 5) && ((CurrentTime - EnteredCurrentStatus) > (60*60))
+periodic_hold =  (JobStatus==2) && ((CurrentTime - EnteredCurrentStatus) > (22*60*60))
+on_exit_hold  = (ExitBySignal == True) || (ExitCode != 0)
+        
+should_transfer_files = YES
+WhenToTransferOutput = ON_EXIT
+        
+notification  = never
+queue
+        """
+        return submit_text.format (site, self.script_name, "--install", self.x509_user_proxy, self.requirements, gatekeeper)    
+    
+    def write_script (self):
+        script_filename = os.path.join (self.run, self.script_name)
+        shutil.copyfile (self.script_name, script_filename)
+            
+    def submit_dag (self, dag):
+        print "==============> %s" % self.run
+        os.chdir (self.run)
+        dag = os.path.basename (dag)
+        logger.info ('submitting dag {0}'.format (dag))
+        os.system ('condor_submit_dag {0}'.format (dag))
+
+    def main (self):                                                                                                                                     
+        ''' Parse arguments. '''                                                                                                                         
+        parser = argparse.ArgumentParser ()                                                                                                              
+        parser.add_argument ("-s", "--submit",   help="Submit.", action='store_true', default=False)
+        parser.add_argument ("-l", "--loglevel",    help="Log level.", default="error")
+        args = parser.parse_args ()                                                                                                                      
+                                                                                                                                                         
+        numeric_level = getattr (logging, args.loglevel.upper (), None)                                                                                  
+        assert isinstance (numeric_level, int), "Undefined log level: %s" % args.loglevel                                                                
+        logging.basicConfig (level=numeric_level, format='%(asctime)-15s %(message)s')                                                                   
+
+        sites = self.get_sites ()
+	print json.dumps (sites, indent=4, sort_keys=True)
+	dag = self.write_dag (sites)
+	if (args.submit):
+            self.submit_dag (dag)
+
+config = {
+    'frontend_status' : "http://engage-submit3.renci.org/glideinwms/monitor/frontend_EngageVO-submit3-v1_0/frontend_status.xml",
+    'x509_user_proxy' : "/tmp/x509up_u{0}".format (os.geteuid ()) #"/home/osgmm/installs/osgmm-0.9/./var/proxy.pem"
+}
+
+glom = Glom (config)
+glom.main ()
+    
+
+
